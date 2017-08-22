@@ -1,6 +1,7 @@
 ﻿using SudokuSolver.SolverLogic;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,14 +39,18 @@ namespace SudokuSolver
                         break;
 
                     case 'l':
-                        Console.WriteLine("NOT IMPLEMENTED");
+                        Console.WriteLine("Load command, reading...");
+                        string[] lwords = command.Split(null);
+                        string filepath = lwords[1];
+                        Console.WriteLine("The file path is: " + filepath);
+                        loadFromFile(filepath);
                         break;
 
                     case 'i':
-                        string[] words = command.Split(' ');
-                        int row = int.Parse(words[1]);
-                        int column = int.Parse(words[2]);
-                        int value = int.Parse(words[3]);
+                        string[] iwords = command.Split(null);
+                        int row = int.Parse(iwords[1]);
+                        int column = int.Parse(iwords[2]);
+                        int value = int.Parse(iwords[3]);
                         sudoku.setCell(row, column, value);
                         Console.WriteLine("Number " + value + " set in cell [" + row + ',' + column + "].");
                         break;
@@ -85,7 +90,7 @@ namespace SudokuSolver
                 "\t h \t Displays this message.\n" +
                 "\t p \t Prints the current state of the sudoku.\n" +
 
-                "\t l {filepath} [NOT IMPLEMENTED] Loads inputs from the specified file. One line for each number, in the format {row} {column} {value}\n" +
+                "\t l {filepath} \t [No spaces in the path!] Loads inputs from the specified file. One line for each number, in the format {row} {column} {value}\n" +
                 "\t i {row} {column} {value}\t Sets a number in the sudoku.\n" +
                 "\t c {row} {column}\t [NOT IMPLEMENTED] Clears the cell and recomputes possible values for all cells" +
                 
@@ -96,6 +101,31 @@ namespace SudokuSolver
                 "\t q \t Quits the program." +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();
+        }
+
+        private static void loadFromFile(string filepath)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(filepath))
+                {
+                    while (sr.Peek() != -1)
+                    {
+                        String[] lineFields = sr.ReadLine().Split(null);
+                        int row = int.Parse(lineFields[0]);
+                        int column = int.Parse(lineFields[1]);
+                        int value = int.Parse(lineFields[2]);
+                        sudoku.setCell(row, column, value);
+                    }
+                    Console.WriteLine("Loading complete, here is the resulting sudoku:");
+                    sudoku.print();
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

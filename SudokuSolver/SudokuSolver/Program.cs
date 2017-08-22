@@ -37,16 +37,30 @@ namespace SudokuSolver
                         sudoku.print();
                         break;
 
+                    case 'l':
+                        Console.WriteLine("NOT IMPLEMENTED");
+                        break;
+
                     case 'i':
                         string[] words = command.Split(' ');
                         int row = int.Parse(words[1]);
                         int column = int.Parse(words[2]);
                         int value = int.Parse(words[3]);
                         sudoku.setCell(row, column, value);
+                        Console.WriteLine("Number " + value + " set in cell [" + row + ',' + column + "].");
+                        break;
+
+                    case 'c':
+                        Console.WriteLine("NOT IMPLEMENTED");
                         break;
 
                     case 'u':
                         sudoku.checkForSet();
+                        Console.WriteLine("Update command executed. [Should specify if 1+ cells were set or not]");
+                        break;
+
+                    case 'r':
+                        Console.WriteLine("NOT IMPLEMENTED");
                         break;
 
                     case 's':
@@ -54,6 +68,7 @@ namespace SudokuSolver
                         break;
 
                     case 'q':
+                        Console.WriteLine("Closing the program.");
                         return;
 
                     default:
@@ -69,16 +84,15 @@ namespace SudokuSolver
                 "Here are the available commands:\n" +
                 "\t h \t Displays this message.\n" +
                 "\t p \t Prints the current state of the sudoku.\n" +
-                
-                "\t l {filepath} [NOT IMPLEMENTED] Loads inputs from the specified file.\n" +
+
+                "\t l {filepath} [NOT IMPLEMENTED] Loads inputs from the specified file. One line for each number, in the format {row} {column} {value}\n" +
                 "\t i {row} {column} {value}\t Sets a number in the sudoku.\n" +
                 "\t c {row} {column}\t [NOT IMPLEMENTED] Clears the cell and recomputes possible values for all cells" +
                 
                 "\t u \t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
                 "\t r \t [NOT IMPLEMENTED] Recomputes possible values for all cells.\t" +
                 "\t s \t [NOT IMPLEMENTED] Tries to solve the sudoku, basically issuing u commands until necessary.\n" +
-
-
+                
                 "\t q \t Quits the program." +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();

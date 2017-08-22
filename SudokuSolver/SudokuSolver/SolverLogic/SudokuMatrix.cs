@@ -70,7 +70,9 @@ namespace SudokuSolver.SolverLogic
         {
             for (int column = 0; column < 9; column++)
             {
-                matrix[row, column].possibleValues.Remove(value);
+                var cell = matrix[row, column];
+                if(cell.state == CellState.undetermined)
+                    cell.possibleValues.Remove(value);
             }
         }
 
@@ -78,18 +80,24 @@ namespace SudokuSolver.SolverLogic
         {
             for (int row = 0; row < 9; row++)
             {
-                matrix[row, column].possibleValues.Remove(value);
+                var cell = matrix[row, column];
+                if (cell.state == CellState.undetermined)
+                    cell.possibleValues.Remove(value);
             }
         }
 
         private void updateTile(int row, int column, int value)
         {
-            int tileBaseRow = row / 3;
-            int tileBaseColumn = column / 3;
+            int tileBaseRow = ( row / 3 ) * 3;
+            int tileBaseColumn = ( column / 3 ) * 3;
 
             for (int rowOffset = 0; rowOffset < 3; rowOffset++)
                 for (int columnOffset = 0; columnOffset < 3; columnOffset++)
-                    matrix[tileBaseRow + rowOffset, tileBaseColumn + columnOffset].possibleValues.Remove(value);
+                {
+                    var cell = matrix[tileBaseRow + rowOffset, tileBaseColumn + columnOffset];
+                    if(cell.state == CellState.undetermined)
+                        cell.possibleValues.Remove(value);
+                }
         }
     }
 }

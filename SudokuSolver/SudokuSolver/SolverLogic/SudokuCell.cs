@@ -17,9 +17,16 @@ namespace SudokuSolver.SolverLogic
         public void set(int value)
         {
             this.value = value;
-            this.state = CellState.determined;
-            this.possibleValues.Clear();
-            this.possibleValues.Add(value);
+            state = CellState.determined;
+            possibleValues.Clear();
+            possibleValues.Add(value);
+        }
+
+        public void clear()
+        {
+            value = null;
+            state = CellState.undetermined;
+            possibleValues = Enumerable.Range(1, 9).ToList<int>();
         }
     }
 }

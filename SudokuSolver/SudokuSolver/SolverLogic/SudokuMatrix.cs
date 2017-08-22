@@ -39,6 +39,18 @@ namespace SudokuSolver.SolverLogic
             Console.WriteLine(sepLine);
         }
 
+        public void clearCell(int row, int column)
+        {
+            matrix[row, column].clear();
+            recomputePossibleValues();
+        }
+
+        public bool setCell(int row, int column, int value)
+        {
+            matrix[row, column].set(value);
+            return updatePossibleValues(row, column, value);
+        }
+
         public int setReadyCells(bool cascade)
         {
             bool availableForSet = false;
@@ -60,10 +72,22 @@ namespace SudokuSolver.SolverLogic
             return cellsSet;
         }
 
-        public bool setCell(int row, int column, int value)
+        public void recomputePossibleValues()
         {
-            matrix[row, column].set(value);
-            return updatePossibleValues(row, column, value);
+            for (int row = 0; row < 9; row++)
+                for (int column = 0; column < 9; column++)
+                {
+                    var cell = matrix[row, column];
+                    if (cell.state == CellState.undetermined)
+                        cell.clear();
+                }
+            for (int row = 0; row < 9; row++)
+                for (int column = 0; column < 9; column++)
+                {
+                    var cell = matrix[row, column];
+                    if (cell.state == CellState.determined)
+                        updatePossibleValues(row, column, (int) cell.value);
+                }
         }
 
         private bool updatePossibleValues(int row, int column, int value)

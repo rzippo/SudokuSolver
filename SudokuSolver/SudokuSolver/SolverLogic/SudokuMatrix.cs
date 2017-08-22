@@ -34,59 +34,76 @@ namespace SudokuSolver.SolverLogic
                     else
                         Console.Write(' ');
                 }
-                Console.WriteLine("|");
+                Console.WriteLine(" |");
             }
-            //Closing line
             Console.WriteLine(sepLine);
         }
 
-        public void checkForSet()
+        public int setReadyCells(bool cascade)
         {
+            bool availableForSet = false;
+            int cellsSet = 0;
             for (int row = 0; row < 9; row++)
             {
                 for (int column = 0; column < 9; column++)
                 {
                     var cell = matrix[row, column];
-                    if(cell.state == CellState.undetermined && cell.possibleValues.Count == 1)
-                        setCell(row, column, cell.possibleValues[0]);
+                    if (cell.state == CellState.undetermined && cell.possibleValues.Count == 1)
+                    {
+                        availableForSet |= setCell(row, column, cell.possibleValues[0]);
+                        cellsSet++;
+                    }
                 }
             }
+            if (cascade && availableForSet)
+                setReadyCells(true);
+            return cellsSet;
         }
 
-        public void setCell(int row, int column, int value )
+        public bool setCell(int row, int column, int value)
         {
             matrix[row, column].set(value);
-            updateAfterSet(row, column, value);
+            return updatePossibleValues(row, column, value);
         }
 
-        private void updateAfterSet(int row, int column, int value)
+        private bool updatePossibleValues(int row, int column, int value)
         {
-            updateRow(row, value);
-            updateColumn(column, value);
-            updateTile(row, column, value);
+            bool availableForSet = false;
+            updateRow(row, value, ref availableForSet);
+            updateColumn(column, value, ref availableForSet);
+            updateTile(row, column, value, ref availableForSet);
+            return availableForSet;
         }
 
-        private void updateRow(int row, int value)
+        private void updateRow(int row, int value, ref bool availableForSet)
         {
             for (int column = 0; column < 9; column++)
             {
                 var cell = matrix[row, column];
-                if(cell.state == CellState.undetermined)
+                if (cell.state == CellState.undetermined)
+                {
                     cell.possibleValues.Remove(value);
+                    if (cell.possibleValues.Count == 1)
+                        availableForSet = true;
+                }
             }
         }
 
-        private void updateColumn(int column, int value)
+        private void updateColumn(int column, int value, ref bool availableForSet)
         {
             for (int row = 0; row < 9; row++)
             {
                 var cell = matrix[row, column];
                 if (cell.state == CellState.undetermined)
+                {
                     cell.possibleValues.Remove(value);
+                    if (cell.possibleValues.Count == 1)
+                        availableForSet = true;
+                }
             }
         }
 
-        private void updateTile(int row, int column, int value)
+        private void updateTile(int row, int column, int value, ref bool availableForSet)
         {
             int tileBaseRow = ( row / 3 ) * 3;
             int tileBaseColumn = ( column / 3 ) * 3;
@@ -95,8 +112,12 @@ namespace SudokuSolver.SolverLogic
                 for (int columnOffset = 0; columnOffset < 3; columnOffset++)
                 {
                     var cell = matrix[tileBaseRow + rowOffset, tileBaseColumn + columnOffset];
-                    if(cell.state == CellState.undetermined)
+                    if (cell.state == CellState.undetermined)
+                    {
                         cell.possibleValues.Remove(value);
+                        if (cell.possibleValues.Count == 1)
+                            availableForSet = true;
+                    }
                 }
         }
     }

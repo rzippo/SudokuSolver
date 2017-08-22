@@ -60,8 +60,8 @@ namespace SudokuSolver
                         break;
 
                     case 'u':
-                        sudoku.checkForSet();
-                        Console.WriteLine("Update command executed. [Should specify if 1+ cells were set or not]");
+                        int updated = sudoku.setReadyCells(false);
+                        Console.WriteLine("Update command executed. " + updated + " cells were set.");
                         break;
 
                     case 'r':
@@ -69,7 +69,10 @@ namespace SudokuSolver
                         break;
 
                     case 's':
-                        Console.WriteLine("NOT IMPLEMENTED");
+                        Console.WriteLine("Solve command, processing...");
+                        sudoku.setReadyCells(true);
+                        Console.WriteLine("Solving completed, the resulting sudoku is: ");
+                        sudoku.print();
                         break;
 
                     case 'q':

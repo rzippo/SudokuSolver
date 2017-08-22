@@ -9,13 +9,35 @@ namespace SudokuSolver.SolverLogic
     class SudokuMatrix
     {
         SudokuCell[,] matrix = new SudokuCell[9, 9];
-
-
+        
         public SudokuMatrix()
         {
             for (int row = 0; row < 9; row++)
                 for (int column = 0; column < 9; column++)
                     matrix[row, column] = new SudokuCell();
+        }
+
+        public void print()
+        {
+            string sepLine = "  ——————— ——————— ——————— ";
+            for (int row = 0; row < 9; row++)
+            {
+                if (row % 3 == 0)
+                    Console.WriteLine(sepLine);
+                for (int column = 0; column < 9; column++)
+                {
+                    if (column % 3 == 0)
+                        Console.Write(" |");
+                    Console.Write(' ');
+                    if (matrix[row, column].state == CellState.determined)
+                        Console.Write(matrix[row, column].value);
+                    else
+                        Console.Write(' ');
+                }
+                Console.WriteLine("|");
+            }
+            //Closing line
+            Console.WriteLine(sepLine);
         }
 
         public void checkForSet()

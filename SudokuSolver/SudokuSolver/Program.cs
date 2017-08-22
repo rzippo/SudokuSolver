@@ -87,18 +87,18 @@ namespace SudokuSolver
         {
             Console.Write("Welcome to SudokuSolver, small project by Raffaele Zippo.\n" +
                 "Here are the available commands:\n" +
-                "\t h \t Displays this message.\n" +
-                "\t p \t Prints the current state of the sudoku.\n" +
+                "\t h \t\t\t\t Displays this message.\n" +
+                "\t p \t\t\t\t Prints the current state of the sudoku.\n" +
 
-                "\t l {filepath} \t [No spaces in the path!] Loads inputs from the specified file. One line for each number, in the format {row} {column} {value}\n" +
-                "\t i {row} {column} {value}\t Sets a number in the sudoku.\n" +
-                "\t c {row} {column}\t [NOT IMPLEMENTED] Clears the cell and recomputes possible values for all cells.\n" +
-                
-                "\t u \t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
-                "\t r \t [NOT IMPLEMENTED] Recomputes possible values for all cells.\n" +
-                "\t s \t [NOT IMPLEMENTED] Tries to solve the sudoku, basically issuing u commands until necessary.\n" +
-                
-                "\t q \t Quits the program.\n" +
+                "\t l {filepath} \t\t\t [No spaces in the path!] Loads inputs from the specified file. One line for each number, in the format {row} {column} {value}\n" +
+                "\t i {row} {column} {value} \t Sets a number in the sudoku.\n" +
+                "\t c {row} {column} \t\t [NOT IMPLEMENTED] Clears the cell and recomputes possible values for all cells.\n" +
+
+                "\t u \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
+                "\t r \t\t\t\t [NOT IMPLEMENTED] Recomputes possible values for all cells.\n" +
+                "\t s \t\t\t\t [NOT IMPLEMENTED] Tries to solve the sudoku, basically issuing u commands until necessary.\n" +
+
+                "\t q \t\t\t\t Quits the program.\n\n" +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();
         }

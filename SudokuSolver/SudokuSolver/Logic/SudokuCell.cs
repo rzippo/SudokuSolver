@@ -6,7 +6,7 @@ namespace SudokuSolver.Logic
 {
     internal class SudokuCell
     {
-        public Boolean IsDetermined { get; private set; }
+        public bool IsDetermined { get; private set; }
         public int? Value;
         public IList<int> PossibleValues = Enumerable.Range(1, 9).ToList();
 

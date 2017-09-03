@@ -44,8 +44,8 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SolverLogic\SudokuCell.cs" />
-    <Compile Include="SolverLogic\SudokuMatrix.cs" />
+    <Compile Include="Logic\SudokuCell.cs" />
+    <Compile Include="Logic\SudokuBoard.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

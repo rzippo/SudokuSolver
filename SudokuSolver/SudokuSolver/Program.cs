@@ -61,8 +61,7 @@ namespace SudokuSolver
                         sudokuBoard.SetCell(
                             cellRow: row,
                             cellColumn: column,
-                            valueToSet: value,
-                            isThereDeterminableCell: out bool unused);
+                            valueToSet: value);
                         Console.WriteLine($"Number {value} set in cell [{row},{column}].");
                         break;
                     }
@@ -87,9 +86,9 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case "step":
+                    case "nakedStep":
                     {
-                        sudokuBoard.SetDeterminableCells(false, out int updated);
+                        int updated = sudokuBoard.SetNakedCandidateCells(false);
                         Console.WriteLine($"Update command executed. {updated} cells were set.");
                         break;
                     }
@@ -108,7 +107,7 @@ namespace SudokuSolver
                     case "recompute":
                     {
                         Console.WriteLine("Recompute command, recomputing possible values...");
-                        sudokuBoard.RecomputePossibleValues();
+                        sudokuBoard.RecomputeCandidates();
                         Console.WriteLine("Recomputation completed");
                         break;
                     }
@@ -117,12 +116,10 @@ namespace SudokuSolver
                     case "s":
                     {
                         Console.WriteLine("Solve command, processing...");
-                        sudokuBoard.SetDeterminableCells(
-                            repeatUntilPossible: true,
-                            nCellsSet: out int updated);
-                        Console.WriteLine(
-                            $"Solving completed, {updated} cells were set. \n" +
-                            "The resulting sudoku is: ");
+                        sudokuBoard.Solve();
+                        Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+
+                        Console.WriteLine("The resulting sudoku is: ");
                         sudokuBoard.PrintBoard();
                         break;
                     }
@@ -156,7 +153,7 @@ namespace SudokuSolver
                 "\t clear {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
                 "\t (r) reset \t\t\t\t Clears the whole board.\n" + 
                 "\n" +
-                "\t step \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
+                "\t nakedStep \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take (naked candidate)\n" +
                 "\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
                 "\t recompute \t\t\t\t Recomputes possible values for all cells.\n" +
                 "\t (s) solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
@@ -192,8 +189,7 @@ namespace SudokuSolver
                                     sudokuBoard.SetCell(
                                         cellRow: row,
                                         cellColumn: column,
-                                        valueToSet: value,
-                                        isThereDeterminableCell: out bool unused);
+                                        valueToSet: value);
                             }
                             row++;
                             if (row >= 9)

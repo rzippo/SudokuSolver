@@ -35,7 +35,7 @@ namespace SudokuSolver
 
                     case 'p':
                     {
-                        sudokuBoard.Print();
+                        sudokuBoard.PrintBoard();
                         break;
                     }
 
@@ -44,7 +44,7 @@ namespace SudokuSolver
                         Console.WriteLine("Load command, reading...");
                         string[] lwords = command.Split(null);
                         string filepath = lwords[1];
-                        Console.WriteLine("The file path is: " + filepath);
+                        Console.WriteLine($"The file path is: {filepath}");
                         LoadFromFile(filepath);
                         break;
                     }
@@ -61,7 +61,7 @@ namespace SudokuSolver
                             cellColumn: column,
                             valueToSet: value,
                             isThereDeterminableCell: out bool unused);
-                        Console.WriteLine("Number " + value + " set in cell [" + row + ',' + column + "].");
+                        Console.WriteLine($"Number {value} set in cell [{row},{column}].");
                         break;
                     }
 
@@ -76,10 +76,29 @@ namespace SudokuSolver
                         break;
                     }
 
+                    case 'b':
+                    {
+                        Console.WriteLine("Board clear command...");
+                        sudokuBoard.ClearBoard();
+                        Console.WriteLine("Clearing complete");
+                        sudokuBoard.PrintBoard();
+                        break;
+                    }
+
                     case 'u':
                     {
                         sudokuBoard.SetDeterminableCells(false, out int updated);
-                        Console.WriteLine("Update command executed. " + updated + " cells were set.");
+                        Console.WriteLine($"Update command executed. {updated} cells were set.");
+                        break;
+                    }
+
+                    case 'd':
+                    {
+                        Console.WriteLine("Cell details command...");
+                        string[] words = command.Split(null);
+                        int row = int.Parse(words[1]);
+                        int column = int.Parse(words[2]);
+                        sudokuBoard.PrintCell(row, column);
                         break;
                     }
 
@@ -98,9 +117,9 @@ namespace SudokuSolver
                             repeatUntilPossible: true,
                             nCellsSet: out int updated);
                         Console.WriteLine(
-                            "Solving completed, " + updated + " cells were set. \n" +
+                            $"Solving completed, {updated} cells were set. \n" +
                             "The resulting sudoku is: ");
-                        sudokuBoard.Print();
+                        sudokuBoard.PrintBoard();
                         break;
                     }
 
@@ -125,16 +144,18 @@ namespace SudokuSolver
                 "Welcome to SudokuSolver, small project by Raffaele Zippo.\n" +
                 "Here are the available commands:\n" +
                 "\t h \t\t\t\t Displays this message.\n" +
-                "\t p \t\t\t\t Prints the current State of the sudokuBoard.\n" +
-
-                "\t l {filepath} \t\t\t [No spaces in the path!] Loads inputs from the specified file.\n" +
-                "\t i {row} {column} {Value} \t Sets a number in the sudokuBoard.\n" +
+                "\t p \t\t\t\t Prints the current state of the sudoku.\n" +
+                "\n" +
+                "\t l {filepath} \t\t\t Clears the board and loads inputs from the specified file. No spaces in the path!\n" +
+                "\t i {row} {column} {Value} \t Sets a number in the sudoku.\n" +
                 "\t c {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
-
+                "\t b \t\t\t\t Clears the whole board.\n" + 
+                "\n" +
                 "\t u \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
+                "\t d {row} {column} \t\t Details the specified cell, including its possible values\n"+
                 "\t r \t\t\t\t Recomputes possible values for all cells.\n" +
                 "\t s \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
-
+                "\n" +
                 "\t q \t\t\t\t Quits the program.\n\n" +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();
@@ -142,6 +163,7 @@ namespace SudokuSolver
 
         private static void LoadFromFile(string filepath)
         {
+            sudokuBoard.ClearBoard();
             try
             {
                 using (StreamReader sr = new StreamReader(filepath))
@@ -173,8 +195,8 @@ namespace SudokuSolver
                                 break;
                         }
                     }
-                    Console.WriteLine("Loading complete, here is the resulting sudokuBoard:");
-                    sudokuBoard.Print();
+                    Console.WriteLine("Loading complete, here is the resulting sudoku:");
+                    sudokuBoard.PrintBoard();
                 }
             }
             catch(Exception e)

@@ -4,16 +4,16 @@ namespace SudokuSolver.Logic
 {
     public class SudokuBoard
     {
-        private readonly SudokuCell[,] matrix = new SudokuCell[9, 9];
+        private readonly SudokuCell[,] cellMatrix = new SudokuCell[9, 9];
         
         public SudokuBoard()
         {
             for (int row = 0; row < 9; row++)
                 for (int column = 0; column < 9; column++)
-                    matrix[row, column] = new SudokuCell();
+                    cellMatrix[row, column] = new SudokuCell();
         }
 
-        public void Print()
+        public void PrintBoard()
         {
             const string sepLine = "  ——————— ——————— ——————— ";
 
@@ -29,7 +29,7 @@ namespace SudokuSolver.Logic
 
                     Console.Write(' ');
 
-                    SudokuCell cell = matrix[row, column];
+                    SudokuCell cell = cellMatrix[row, column];
                     if ( cell.IsDetermined)
                         Console.Write(cell.Value);
                     else
@@ -41,12 +41,27 @@ namespace SudokuSolver.Logic
             Console.WriteLine(sepLine);
         }
 
+        public void PrintCell(int cellRow, int cellColumn)
+        {
+            SudokuCell cell = cellMatrix[cellRow, cellColumn];
+            Console.WriteLine($"Cell [{cellRow},{cellColumn}]:");
+            Console.WriteLine($"\tDetermined: {cell.IsDetermined}");
+            Console.WriteLine($"\tValue: {cell.Value}");
+            Console.WriteLine($"\tPossible values: {string.Join(",", cell.PossibleValues)}");
+        }
+
+        public void ClearBoard()
+        {
+            for (int row = 0; row < 9; row++)
+            for (int column = 0; column < 9; column++)
+                cellMatrix[row, column].Clear();
+        }
+
         public void ClearCell(
             int cellRow,
             int cellColumn)
         {
-            SudokuCell cell = matrix[cellRow, cellColumn];
-            cell.Clear();
+            cellMatrix[cellRow, cellColumn].Clear();
             RecomputePossibleValues();
         }
 
@@ -56,7 +71,7 @@ namespace SudokuSolver.Logic
             int valueToSet,
             out bool isThereDeterminableCell)
         {
-            SudokuCell cell = matrix[cellRow, cellColumn];
+            SudokuCell cell = cellMatrix[cellRow, cellColumn];
             cell.Set(valueToSet);
             UpdateBoardPossibleValues(
                 sourceRow: cellRow,
@@ -76,7 +91,7 @@ namespace SudokuSolver.Logic
             {
                 for (int column = 0; column < 9; column++)
                 {
-                    SudokuCell cell = matrix[row, column];
+                    SudokuCell cell = cellMatrix[row, column];
                     if (cell.IsDeterminable())
                     {
                         SetCell(
@@ -105,7 +120,7 @@ namespace SudokuSolver.Logic
             {
                 for (int column = 0; column < 9; column++)
                 {
-                    SudokuCell cell = matrix[row, column];
+                    SudokuCell cell = cellMatrix[row, column];
                     if (!cell.IsDetermined)
                         cell.Clear();
                 }
@@ -115,7 +130,7 @@ namespace SudokuSolver.Logic
             {
                 for (int column = 0; column < 9; column++)
                 {
-                    SudokuCell cell = matrix[row, column];
+                    SudokuCell cell = cellMatrix[row, column];
                     if (cell.IsDetermined)
                         UpdateBoardPossibleValues(
                             sourceRow: row,
@@ -158,7 +173,7 @@ namespace SudokuSolver.Logic
         {
             for (int column = 0; column < 9; column++)
             {
-                SudokuCell cell = matrix[sourceRow, column];
+                SudokuCell cell = cellMatrix[sourceRow, column];
                 cell.RemovePossibleValue(valueToRemove);
                 isThereDeterminableCell |= cell.IsDeterminable();
             }
@@ -171,7 +186,7 @@ namespace SudokuSolver.Logic
         {
             for (int row = 0; row < 9; row++)
             {
-                SudokuCell cell = matrix[row, sourceColumn];
+                SudokuCell cell = cellMatrix[row, sourceColumn];
                 cell.RemovePossibleValue(valueToRemove);
                 isThereDeterminableCell |= cell.IsDeterminable();
             }
@@ -192,7 +207,7 @@ namespace SudokuSolver.Logic
                 {
                     int row = tileBaseRow + rowOffset;
                     int column = tileBaseColumn + columnOffset;
-                    SudokuCell cell = matrix[ row, column];
+                    SudokuCell cell = cellMatrix[ row, column];
                     cell.RemovePossibleValue(valueToRemove);
                     isThereDeterminableCell |= cell.IsDeterminable();
                 }

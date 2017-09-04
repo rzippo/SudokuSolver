@@ -25,21 +25,25 @@ namespace SudokuSolver
                 string command = Console.ReadLine();
                 Console.WriteLine("");
 
-                switch(command[0])
+                string[] commandWords = command.Split(null);
+                switch(commandWords[0])
                 {
-                    case 'h':
+                    case "help":
+                    case "h":
                     {
                         DisplayHelp();
                         break;
                     }
 
-                    case 'p':
+                    case "print":
+                    case "p":
                     {
                         sudokuBoard.PrintBoard();
                         break;
                     }
 
-                    case 'l':
+                    case "load":
+                    case "l":
                     {
                         Console.WriteLine("Load command, reading...");
                         string[] lwords = command.Split(null);
@@ -49,7 +53,7 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case 'i':
+                    case "set":
                     {
                         string[] iwords = command.Split(null);
                         int row = int.Parse(iwords[1]);
@@ -65,18 +69,19 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case 'c':
+                    case "clear":
                     {
                         Console.WriteLine("Clear cell command, clearing and recomputing...");
                         string[] words = command.Split(null);
-                        int row = int.Parse(words[1]);
-                        int column = int.Parse(words[2]);
+                        int row = int.Parse(words[1]) - 1;
+                        int column = int.Parse(words[2]) - 1;
                         sudokuBoard.ClearCell(row, column);
                         Console.WriteLine("Clearing complete.");
                         break;
                     }
 
-                    case 'b':
+                    case "reset":
+                    case "r":
                     {
                         Console.WriteLine("Board clear command...");
                         sudokuBoard.ClearBoard();
@@ -85,24 +90,24 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case 'u':
+                    case "step":
                     {
                         sudokuBoard.SetDeterminableCells(false, out int updated);
                         Console.WriteLine($"Update command executed. {updated} cells were set.");
                         break;
                     }
 
-                    case 'd':
+                    case "detail":
                     {
                         Console.WriteLine("Cell details command...");
                         string[] words = command.Split(null);
-                        int row = int.Parse(words[1]);
-                        int column = int.Parse(words[2]);
+                        int row = int.Parse(words[1]) - 1;
+                        int column = int.Parse(words[2]) - 1;
                         sudokuBoard.PrintCell(row, column);
                         break;
                     }
 
-                    case 'r':
+                    case "recompute":
                     {
                         Console.WriteLine("Recompute command, recomputing possible values...");
                         sudokuBoard.RecomputePossibleValues();
@@ -110,7 +115,8 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case 's':
+                    case "solve":
+                    case "s":
                     {
                         Console.WriteLine("Solve command, processing...");
                         sudokuBoard.SetDeterminableCells(
@@ -123,7 +129,8 @@ namespace SudokuSolver
                         break;
                     }
 
-                    case 'q':
+                    case "quit":
+                    case "q":
                     {
                         Console.WriteLine("Closing the program.");
                         return;
@@ -142,21 +149,21 @@ namespace SudokuSolver
         {
             Console.Write(
                 "Welcome to SudokuSolver, small project by Raffaele Zippo.\n" +
-                "Here are the available commands:\n" +
-                "\t h \t\t\t\t Displays this message.\n" +
-                "\t p \t\t\t\t Prints the current state of the sudoku.\n" +
+                "Here are the available commands. Abbreviation are shown in round brackets, parameters in curly brackets:\n" +
+                "\t (h) help \t\t\t\t Displays this message.\n" +
+                "\t (p) print \t\t\t\t Prints the current state of the sudoku.\n" +
                 "\n" +
-                "\t l {filepath} \t\t\t Clears the board and loads inputs from the specified file. No spaces in the path!\n" +
-                "\t i {row} {column} {Value} \t Sets a number in the sudoku.\n" +
-                "\t c {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
-                "\t b \t\t\t\t Clears the whole board.\n" + 
+                "\t (l) load {filepath} \t\t\t Clears the board and loads inputs from the specified file. No spaces in the path!\n" +
+                "\t set {row} {column} {Value} \t Sets a number in the sudoku.\n" +
+                "\t clear {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
+                "\t (r) reset \t\t\t\t Clears the whole board.\n" + 
                 "\n" +
-                "\t u \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
-                "\t d {row} {column} \t\t Details the specified cell, including its possible values\n"+
-                "\t r \t\t\t\t Recomputes possible values for all cells.\n" +
-                "\t s \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
+                "\t step \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take\n" +
+                "\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
+                "\t recompute \t\t\t\t Recomputes possible values for all cells.\n" +
+                "\t (s) solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
                 "\n" +
-                "\t q \t\t\t\t Quits the program.\n\n" +
+                "\t (q) quit \t\t\t\t Quits the program.\n\n" +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();
         }

@@ -46,8 +46,7 @@ namespace SudokuSolver
                     case "l":
                     {
                         Console.WriteLine("Load command, reading...");
-                        string[] lwords = command.Split(null);
-                        string filepath = lwords[1];
+                        string filepath = commandWords[1];
                         Console.WriteLine($"The file path is: {filepath}");
                         LoadFromFile(filepath);
                         break;
@@ -55,10 +54,9 @@ namespace SudokuSolver
 
                     case "set":
                     {
-                        string[] iwords = command.Split(null);
-                        int row = int.Parse(iwords[1]);
-                        int column = int.Parse(iwords[2]);
-                        int value = int.Parse(iwords[3]);
+                        int row = int.Parse(commandWords[1]);
+                        int column = int.Parse(commandWords[2]);
+                        int value = int.Parse(commandWords[3]);
 
                         sudokuBoard.SetCell(
                             cellRow: row,
@@ -72,9 +70,8 @@ namespace SudokuSolver
                     case "clear":
                     {
                         Console.WriteLine("Clear cell command, clearing and recomputing...");
-                        string[] words = command.Split(null);
-                        int row = int.Parse(words[1]) - 1;
-                        int column = int.Parse(words[2]) - 1;
+                        int row = int.Parse(commandWords[1]) - 1;
+                        int column = int.Parse(commandWords[2]) - 1;
                         sudokuBoard.ClearCell(row, column);
                         Console.WriteLine("Clearing complete.");
                         break;
@@ -100,10 +97,11 @@ namespace SudokuSolver
                     case "detail":
                     {
                         Console.WriteLine("Cell details command...");
-                        string[] words = command.Split(null);
-                        int row = int.Parse(words[1]) - 1;
-                        int column = int.Parse(words[2]) - 1;
-                        sudokuBoard.PrintCell(row, column);
+                        int row = int.Parse(commandWords[1]) - 1;
+                        int column = int.Parse(commandWords[2]) - 1;
+                        sudokuBoard.PrintCell(
+                            cellRow: row,
+                            cellColumn: column);
                         break;
                     }
 

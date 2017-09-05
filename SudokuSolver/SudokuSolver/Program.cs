@@ -152,21 +152,21 @@ namespace SudokuSolver
             Console.Write(
                 "Welcome to SudokuSolver, small project by Raffaele Zippo.\n" +
                 "Here are the available commands. Abbreviation are shown in round brackets, parameters in curly brackets:\n" +
-                "\t (h) help \t\t\t\t Displays this message.\n" +
-                "\t (p) print \t\t\t\t Prints the current state of the sudoku.\n" +
+                "\t (h) \t help \t\t\t\t Displays this message.\n" +
+                "\t (p) \t print \t\t\t\t Prints the current state of the sudoku.\n" +
                 "\n" +
-                "\t (l) load {filepath} \t\t\t Clears the board and loads inputs from the specified file. No spaces in the path!\n" +
-                "\t set {row} {column} {Value} \t Sets a number in the sudoku.\n" +
-                "\t clear {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
-                "\t (r) reset \t\t\t\t Clears the whole board.\n" + 
+                "\t (l) \t load {filepath} \t\t Clears the board and loads inputs from the specified file. No spaces in the path!\n" +
+                "\t\t set {row} {column} {Value} \t Sets a number in the sudoku.\n" +
+                "\t\t clear {row} {column} \t\t Clears the cell and recomputes possible values for all cells.\n" +
+                "\t (r) \t reset \t\t\t\t Clears the whole board.\n" + 
                 "\n" +
-                "\t nakedStep \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take (naked candidate)\n" +
-                "\t hiddenStep \t\t\t\t Checks each row, column and tile and sets cells which are the only one who can take a certain value in a group (hidden candidate)\t" +
-                "\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
-                "\t recompute \t\t\t\t Recomputes possible values for all cells.\n" +
-                "\t (s) solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
+                "\t\t nakedStep \t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take (naked candidate)\n" +
+                "\t\t hiddenStep \t\t\t Checks each row, column and tile and sets cells which are the only one who can take a certain value in a group (hidden candidate)\n" +
+                "\t\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
+                "\t\t recompute \t\t\t Recomputes possible values for all cells.\n" +
+                "\t (s) \t solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
                 "\n" +
-                "\t (q) quit \t\t\t\t Quits the program.\n\n" +
+                "\t (q) \t quit \t\t\t\t Quits the program.\n\n" +
                 "This program may crash in case of incorrect input :P");
             Console.WriteLine();
         }

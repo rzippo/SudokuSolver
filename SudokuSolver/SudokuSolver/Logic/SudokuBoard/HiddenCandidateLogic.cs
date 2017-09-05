@@ -27,7 +27,7 @@ namespace SudokuSolver.Logic
             );
             foreach (int hiddenCandidate in hiddenCandidates)
             {
-                SudokuCell cell = cellGroup.Where(c => c.Candidates.Contains(hiddenCandidate)).ElementAt(0);
+                SudokuCell cell = cellGroup.First(c => c.Candidates.Contains(hiddenCandidate));
                 if (!cell.IsDetermined)
                 {
                     cell.Set(hiddenCandidate);

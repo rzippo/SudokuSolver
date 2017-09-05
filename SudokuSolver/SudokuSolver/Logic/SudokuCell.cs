@@ -34,7 +34,7 @@ namespace SudokuSolver.Logic
             Candidates = Enumerable.Range(1, 9).ToList();
         }
 
-        public void RemovePossibleValue( int valueToRemove )
+        public void RemoveCandidate( int valueToRemove )
         {
             if (!IsDetermined)
                 Candidates.Remove(valueToRemove);

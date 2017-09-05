@@ -12,6 +12,7 @@ namespace SudokuSolver.Logic
         private readonly List<SudokuCell>[] rows;
         private readonly List<SudokuCell>[] columns;
         private readonly List<SudokuCell>[,] tiles;
+        private readonly List<List<SudokuCell>> combinedGroups;
 
         public SudokuBoard()
         {
@@ -22,6 +23,10 @@ namespace SudokuSolver.Logic
             rows = GatherRows();
             columns = GatherColumns();
             tiles = GatherTiles();
+            combinedGroups = new List<List<SudokuCell>>();
+            combinedGroups.AddRange(rows);
+            combinedGroups.AddRange(columns);
+            combinedGroups.AddRange(tiles.Cast<List<SudokuCell>>());
         }
 
         private List<SudokuCell>[] GatherRows()

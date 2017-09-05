@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,18 +23,15 @@ namespace SudokuSolver.Logic
 
         public bool IsSolved()
         {
-            return
-                TestGroupsSolved(rows) &&
-                TestGroupsSolved(columns) &&
-                TestGroupsSolved(tiles.Cast<IEnumerable<SudokuCell>>());
-
-            bool TestGroupsSolved(IEnumerable<IEnumerable<SudokuCell>> cellGroups)
-            {
-                return cellGroups.All(
+            return combinedGroups.All(
                     cellGroup => sudokuValues.All(
                         value => cellGroup.Any(
                             cell => cell.Value == value)));
-            }
+        }
+
+        public bool IsLegal()
+        {
+            return false;
         }
 
         public int SetNakedCandidateCells()
@@ -58,12 +56,7 @@ namespace SudokuSolver.Logic
 
         public int SetHiddenCandidateCells()
         {
-            List<List<SudokuCell>> sudokuGroups = new List<List<SudokuCell>>();
-            sudokuGroups.AddRange(rows);
-            sudokuGroups.AddRange(columns);
-            sudokuGroups.AddRange(tiles.Cast<List<SudokuCell>>());
-
-            return sudokuGroups.Sum(SetGroupHiddenCandidates);
+            return combinedGroups.Sum(SetGroupHiddenCandidates);
 
             int SetGroupHiddenCandidates(List<SudokuCell> sudokuGroup)
             {

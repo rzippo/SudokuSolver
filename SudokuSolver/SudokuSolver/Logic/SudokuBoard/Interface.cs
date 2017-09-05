@@ -38,6 +38,10 @@ namespace SudokuSolver.Logic
                 Console.WriteLine(" |");
             }
             Console.WriteLine(sepLine);
+            Console.WriteLine();
+            if (!IsLegal())
+                Console.WriteLine("This sudoku is not legal!");
+            Console.WriteLine("This sudoku is " + (IsSolved() ? "solved" : "not solved"));
         }
 
         public void PrintCell(int cellRow, int cellColumn)
@@ -51,9 +55,8 @@ namespace SudokuSolver.Logic
 
         public void ClearBoard()
         {
-            for (int row = 0; row < 9; row++)
-            for (int column = 0; column < 9; column++)
-                cellMatrix[row, column].Clear();
+            foreach (var cell in cellMatrix)
+                cell.Clear();
         }
 
         public void ClearCell(

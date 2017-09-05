@@ -29,6 +29,18 @@ namespace SudokuSolver.Logic
             combinedGroups.AddRange(tiles.Cast<List<SudokuCell>>());
         }
 
+        private void CopyBoard(SudokuBoard other)
+        {
+            ClearBoard();
+            other.cellMatrix.Cast<SudokuCell>()
+                .Where(cell => cell.IsDetermined)
+                .ToList()
+                .ForEach(cell => this.SetCell(
+                           cellRow: cell.Row,
+                           cellColumn: cell.Column,
+                           valueToSet: (int)cell.Value));
+        }
+
         private List<SudokuCell>[] GatherRows()
         {
             List<SudokuCell>[] rows = new List<SudokuCell>[9];

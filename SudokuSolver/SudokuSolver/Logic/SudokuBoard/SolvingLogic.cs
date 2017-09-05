@@ -25,7 +25,10 @@ namespace SudokuSolver.Logic
                     .First(cell => cell.Candidates.Count == 
                         undeterminedCells.Min(c => c.Candidates.Count));
 
-                foreach(int candidate in speculationTarget.Candidates)
+                Random rng = new Random();
+                var shuffledCandidates = speculationTarget.Candidates
+                    .OrderBy(c => rng.Next());
+                foreach (int candidate in shuffledCandidates)
                 {
                     SudokuBoard speculativeBoard = new SudokuBoard();
                     speculativeBoard.CopyBoard(this);

@@ -6,11 +6,12 @@ namespace SudokuSolver.Logic
 {
     public partial class SudokuBoard
     {
+        private static readonly List<int> sudokuValues = Enumerable.Range(1, 9).ToList();
+
         private readonly SudokuCell[,] cellMatrix = new SudokuCell[9, 9];
         private readonly List<SudokuCell>[] rows;
         private readonly List<SudokuCell>[] columns;
         private readonly List<SudokuCell>[,] tiles;
-
 
         public SudokuBoard()
         {

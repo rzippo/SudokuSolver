@@ -42,10 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\SudokuBoard\HiddenCandidateLogic.cs" />
+    <Compile Include="Logic\SudokuBoard\SolvingLogic.cs" />
     <Compile Include="Logic\SudokuBoard\Structure.cs" />
-    <Compile Include="Logic\SudokuBoard\SolvedCheck.cs" />
-    <Compile Include="Logic\SudokuBoard\NakedCandidateLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logic\SudokuCell.cs" />

@@ -76,16 +76,5 @@ namespace SudokuSolver.Logic
                 sourceColumn: cellColumn,
                 valueToRemove: valueToSet);
         }
-
-        public void Solve()
-        {
-            int lastCycleSetEvents;
-            do
-            {
-                while(HasNakedCandidate())
-                    SetNakedCandidateCells();
-                lastCycleSetEvents = SetHiddenCandidateCells();
-            } while ( !IsSolved() &&  lastCycleSetEvents > 0);
-        }
     }
 }

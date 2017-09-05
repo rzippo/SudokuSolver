@@ -11,9 +11,11 @@ Check the [user guide](User guide.md) for more details about the interface.
 
 # About the algorithm(s)
 
-At first, the program was built on finding "naked candidates", which are cells where only one number can be legally written to.
-As I found it to be not enough, I then introduced "hidden candidates", which are cells with more then one candidate but one of them is unique in one of the groups the cell belongs, e.g. a cell being the only one in its row who can hold the number 1.
+At first, the program was built on finding *naked candidates*, which are cells where only one number can be legally written to.
+
+As I found it to be not enough, I then introduced *hidden candidates*, which are cells with more then one candidate but one of them is unique in one of the groups the cell belongs, e.g. a cell being the only one in its row who can hold the number 1.
+
 Turns out, there is [much more than that](https://www.sudokuoftheday.com/techniques/) required to be able to solve the hardest puzzles.
 
-The current roadmap is to introduce a speculative technique, where, given a scheme that cannot be solved with the implemented techinques, cells are assigned candidates to try to unlock the scheme.
-This of course requires more resources than the current setup, but it should guarantee to eventually solve the scheme and it can be later optimized by introducing more non-speculative techniques.
+The current roadmap is to introduce a *speculative technique*, where, given a scheme that cannot be solved with the implemented techinques, cells are assigned candidates to try to unlock the scheme.
+This of course will require more resources than the current setup, but it should guarantee to eventually solve the scheme, and it can be later optimized by introducing more non-speculative techniques.

@@ -12,13 +12,48 @@ namespace SudokuSolver.Logic
     {
         public void Solve()
         {
+            BasicSolve();
+            if(IsLegal() && !IsSolved())
+            {
+                Console.WriteLine("Basic algorithm insufficient, starting speculative step...");
+                var undeterminedCells =
+                    cellMatrix.Cast<SudokuCell>()
+                    .Where(cell => !cell.IsDetermined);
+
+                SudokuCell speculationTarget = 
+                    undeterminedCells
+                    .First(cell => cell.Candidates.Count == 
+                        undeterminedCells.Min(c => c.Candidates.Count));
+
+                foreach(int candidate in speculationTarget.Candidates)
+                {
+                    SudokuBoard speculativeBoard = new SudokuBoard();
+                    speculativeBoard.CopyBoard(this);
+                    speculativeBoard.SetCell(
+                        cellRow: speculationTarget.Row,
+                        cellColumn: speculationTarget.Column,
+                        valueToSet: candidate);
+
+                    speculativeBoard.Solve();
+                    if(speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
+                    {
+                        this.CopyBoard(speculativeBoard);
+                        return;
+                    }
+                    Console.WriteLine("Speculation unsuccessful...");
+                }
+            }
+        }
+
+        private void BasicSolve()
+        {
             int lastCycleSetEvents;
             do
             {
                 while (HasNakedCandidate())
                     SetNakedCandidateCells();
                 lastCycleSetEvents = SetHiddenCandidateCells();
-            } while (!IsSolved() && lastCycleSetEvents > 0);
+            } while ( IsLegal() && !IsSolved() && lastCycleSetEvents > 0);
         }
 
         public bool IsSolved()
@@ -31,7 +66,16 @@ namespace SudokuSolver.Logic
 
         public bool IsLegal()
         {
-            return false;
+            RecomputeCandidates();
+            return
+                cellMatrix.Cast<SudokuCell>()
+                .Where(cell => !cell.IsDetermined)
+                .All(cell => cell.Candidates.Count > 0)
+                &&
+                combinedGroups
+                .All(cellGroup => sudokuValues
+                                    .All( value =>
+                                            cellGroup.Count(cell => cell.IsDetermined && cell.Value == value) <= 1));
         }
 
         public int SetNakedCandidateCells()
@@ -44,11 +88,14 @@ namespace SudokuSolver.Logic
                 .ForEach(
                     cell =>
                     {
-                        SetCell(
-                            cellRow: cell.Row,
-                            cellColumn: cell.Column,
-                            valueToSet: cell.Candidates[0]);
-                        nCellsSet++;
+                        if (cell.Candidates.Count == 1)
+                        {
+                            SetCell(
+                                cellRow: cell.Row,
+                                cellColumn: cell.Column,
+                                valueToSet: cell.Candidates[0]);
+                            nCellsSet++;
+                        }
                     });
             
             return nCellsSet;

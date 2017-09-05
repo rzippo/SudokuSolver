@@ -7,8 +7,17 @@ namespace SudokuSolver.Logic
     internal class SudokuCell
     {
         public bool IsDetermined { get; private set; }
-        public int? Value;
-        public IList<int> Candidates = Enumerable.Range(1, 9).ToList();
+        public int? Value { get; private set; }
+        public IList<int> Candidates { get; private set; } = Enumerable.Range(1, 9).ToList();
+
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+
+        public SudokuCell(int row = 0, int column = 0)
+        {
+            Row = row;
+            Column = column;
+        }
 
         public void Set(int valueToSet)
         {

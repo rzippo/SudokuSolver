@@ -8,8 +8,7 @@ namespace SudokuSolver.Logic
 {
     public partial class SudokuBoard
     {
-        public int SetNakedCandidateCells(
-            bool repeatUntilPossible)
+        public int SetNakedCandidateCells()
         {
             int nCellsSet = 0;
 
@@ -28,10 +27,6 @@ namespace SudokuSolver.Logic
                     }
                 }
             }
-
-            if (repeatUntilPossible && HasNakedCandidate())
-                nCellsSet += SetNakedCandidateCells(repeatUntilPossible: true);
-
             return nCellsSet;
         }
 

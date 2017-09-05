@@ -6,19 +6,10 @@ namespace SudokuSolver.Logic
 {
     public partial class SudokuBoard
     {
-        private readonly SudokuCell[,] cellMatrix = new SudokuCell[9, 9];
-
         public bool HasNakedCandidate()
         {
             return cellMatrix.Cast<SudokuCell>()
                 .Any(cell => cell.HasNakedCandidate());
-        }
-
-        public SudokuBoard()
-        {
-            for (int row = 0; row < 9; row++)
-                for (int column = 0; column < 9; column++)
-                    cellMatrix[row, column] = new SudokuCell();
         }
 
         public void PrintBoard()
@@ -88,8 +79,13 @@ namespace SudokuSolver.Logic
 
         public void Solve()
         {
-            //Incomplete strategy
-            SetNakedCandidateCells(true);
+            int lastCycleSetEvents;
+            do
+            {
+                while(HasNakedCandidate())
+                    SetNakedCandidateCells();
+                lastCycleSetEvents = SetHiddenCandidateCells();
+            } while ( !IsSolved() &&  lastCycleSetEvents > 0);
         }
     }
 }

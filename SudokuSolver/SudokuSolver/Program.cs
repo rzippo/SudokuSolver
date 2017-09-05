@@ -88,8 +88,15 @@ namespace SudokuSolver
 
                     case "nakedStep":
                     {
-                        int updated = sudokuBoard.SetNakedCandidateCells(false);
-                        Console.WriteLine($"Update command executed. {updated} cells were set.");
+                        int updated = sudokuBoard.SetNakedCandidateCells();
+                        Console.WriteLine($"Naked step command executed. {updated} cells were set.");
+                        break;
+                    }
+
+                    case "hiddenStep":
+                    {
+                        int updated = sudokuBoard.SetHiddenCandidateCells();
+                        Console.WriteLine($"Hidden step command executed. {updated} cells were set.");
                         break;
                     }
 
@@ -154,6 +161,7 @@ namespace SudokuSolver
                 "\t (r) reset \t\t\t\t Clears the whole board.\n" + 
                 "\n" +
                 "\t nakedStep \t\t\t\t Checks each cell, left to right and top to bottom, and sets it if there is only one possible value it can take (naked candidate)\n" +
+                "\t hiddenStep \t\t\t\t Checks each row, column and tile and sets cells which are the only one who can take a certain value in a group (hidden candidate)\t" +
                 "\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
                 "\t recompute \t\t\t\t Recomputes possible values for all cells.\n" +
                 "\t (s) solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +

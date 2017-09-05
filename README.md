@@ -7,7 +7,7 @@ The program is structured with a command based interface, consisting in commands
 This includes commands for both automatic and manual usage, that is
 	- automatic: load a scheme from file, process it until solved or unable to continue
 	- manual: set single numbers, clear them, solve it step by step
-Check the [user guide](User guide.md) for more details about the interface.
+Check the [user guide](User_guide.md) for more details about the interface.
 
 # About the algorithm(s)
 

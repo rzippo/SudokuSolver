@@ -1,5 +1,6 @@
 ﻿using SudokuSolver.Logic;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -123,9 +124,25 @@ namespace SudokuSolver
                     case "s":
                     {
                         Console.WriteLine("Solve command, processing...");
+                        var watch = Stopwatch.StartNew();
                         sudokuBoard.Solve();
+                        var elapsedMs = watch.ElapsedMilliseconds;
                         Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+                        Console.WriteLine($"Execution took {elapsedMs} milliseconds.");
+                        Console.WriteLine("The resulting sudoku is: ");
+                        sudokuBoard.PrintBoard();
+                        break;
+                    }
 
+                    case "parallelsolve":
+                    case "ps":
+                    {
+                        Console.WriteLine("Parallel solve command, processing...");
+                        var watch = Stopwatch.StartNew();
+                        sudokuBoard.ParallelSolve().Wait();
+                        var elapsedMs = watch.ElapsedMilliseconds;
+                        Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+                        Console.WriteLine($"Execution took {elapsedMs} milliseconds.");
                         Console.WriteLine("The resulting sudoku is: ");
                         sudokuBoard.PrintBoard();
                         break;
@@ -164,7 +181,8 @@ namespace SudokuSolver
                 "\t\t hiddenStep \t\t\t Checks each row, column and tile and sets cells which are the only one who can take a certain value in a group (hidden candidate)\n" +
                 "\t\t detail {row} {column} \t\t Details the specified cell, including its possible values\n"+
                 "\t\t recompute \t\t\t Recomputes possible values for all cells.\n" +
-                "\t (s) \t solve \t\t\t\t Tries to solve the sudoku. Equivalent to issuing u commands until necessary.\n" +
+                "\t (s) \t solve \t\t\t\t Tries to solve the sudoku, using naked and hidden candidate detection first and then speculation.\n" +
+                "\t (ps) \t parallelsolve \t\t\t\t Equivalent to solve, except the speculations are executed in parallel. Proved to be inefficient due to large overhead.\n" +
                 "\n" +
                 "\t (q) \t quit \t\t\t\t Quits the program.\n\n" +
                 "This program may crash in case of incorrect input :P");

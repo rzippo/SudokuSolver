@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SudokuSolver.Logic
@@ -13,17 +14,16 @@ namespace SudokuSolver.Logic
         public void Solve()
         {
             BasicSolve();
-            if(IsLegal() && !IsSolved())
+            if (IsLegal() && !IsSolved())
             {
-                Console.WriteLine("Basic algorithm insufficient, starting speculative step...");
                 var undeterminedCells =
                     cellMatrix.Cast<SudokuCell>()
-                    .Where(cell => !cell.IsDetermined);
+                        .Where(cell => !cell.IsDetermined);
 
-                SudokuCell speculationTarget = 
+                SudokuCell speculationTarget =
                     undeterminedCells
-                    .First(cell => cell.Candidates.Count == 
-                        undeterminedCells.Min(c => c.Candidates.Count));
+                        .First(cell => cell.Candidates.Count ==
+                                       undeterminedCells.Min(c => c.Candidates.Count));
 
                 Random rng = new Random();
                 var shuffledCandidates = speculationTarget.Candidates
@@ -38,12 +38,62 @@ namespace SudokuSolver.Logic
                         valueToSet: candidate);
 
                     speculativeBoard.Solve();
-                    if(speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
+                    if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
                     {
                         this.CopyBoard(speculativeBoard);
                         return;
                     }
-                    Console.WriteLine("Speculation unsuccessful...");
+                }
+            }
+        }
+
+        public async Task ParallelSolve()
+        {
+            BasicSolve();
+            if(IsLegal() && !IsSolved())
+            {
+                var undeterminedCells =
+                    cellMatrix.Cast<SudokuCell>()
+                    .Where(cell => !cell.IsDetermined);
+
+                SudokuCell speculationTarget = 
+                    undeterminedCells
+                    .First(cell => cell.Candidates.Count == 
+                        undeterminedCells.Min(c => c.Candidates.Count));
+
+                var tokenSource = new CancellationTokenSource();
+                List<Task<SudokuBoard>> speculationTasks = new List<Task<SudokuBoard>>();
+                foreach (int candidate in speculationTarget.Candidates)
+                {
+                    SudokuBoard speculativeBoard = new SudokuBoard();
+                    speculativeBoard.CopyBoard(this);
+                    speculativeBoard.SetCell(
+                        cellRow: speculationTarget.Row,
+                        cellColumn: speculationTarget.Column,
+                        valueToSet: candidate);
+
+                    var token = tokenSource.Token;
+                    speculationTasks.Add(
+                        Task.Factory.StartNew(() =>
+                            {
+                                speculativeBoard.ParallelSolve().Wait(token);
+                                return speculativeBoard;
+                            },
+                            token)
+                    );
+                }
+
+                while (speculationTasks.Count > 0)
+                {
+                    Task<SudokuBoard> completedTask = await Task.WhenAny(speculationTasks);
+                    SudokuBoard speculativeBoard = completedTask.Result;
+                    if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
+                    {
+                        tokenSource.Cancel();
+                        this.CopyBoard(speculativeBoard);
+                        return;
+                    }
+                    speculationTasks.Remove(completedTask);
                 }
             }
         }

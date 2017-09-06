@@ -167,7 +167,7 @@ namespace SudokuSolver
         private static void DisplayHelp()
         {
             Console.Write(
-                "Welcome to SudokuSolver, small project by Raffaele Zippo.\n" +
+                "Welcome to SudokuSolver, C# project by Raffaele Zippo.\n" +
                 "Here are the available commands. Abbreviation are shown in round brackets, parameters in curly brackets:\n" +
                 "\t (h) \t help \t\t\t\t Displays this message.\n" +
                 "\t (p) \t print \t\t\t\t Prints the current state of the sudoku.\n" +

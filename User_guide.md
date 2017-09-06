@@ -28,7 +28,7 @@ Using the **load** command the sudoku to solve can be loaded from a file which r
  	  - 9 5  - - -  - - -
  	  - 2 -  - - 8  1 - -
 
-The sudoku can the be solved, at the best of the program's capabilites, using the **solve** command.
+The sudoku can the be solved, at the best of the program's capabilities, using the **solve** command. This command uses first deduction, with hidden and naked candidates search, the speculation when those fail. Speculations are explored synchronously. **parallelsolve**, instead, uses a parallel exploration of the possible speculations. Due to the parallelization overhead, it is less efficient.
 
 # Manual mode commands
 

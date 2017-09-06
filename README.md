@@ -17,5 +17,6 @@ As I found it to be not enough, I then introduced *hidden candidates*, which are
 
 Turns out, there is [much more than that](https://www.sudokuoftheday.com/techniques/) required to be able to solve the hardest puzzles.
 
-The current roadmap is to introduce a *speculative technique*, where, given a scheme that cannot be solved with the implemented techinques, cells are assigned candidates to try to unlock the scheme.
-This of course will require more resources than the current setup, but it should guarantee to eventually solve the scheme, and it can be later optimized by introducing more non-speculative techniques.
+So I introduced also a *speculative technique*. Each time a scheme is found to be unsolvable with the available deduction techniques, yet still legal, one of the undetermined cells with the lowest number of candidates is selected for the speculation. At each step of the speculation, the cell is then set with one of its candidates, selected at random, and another attempt to solve the scheme is made. If it fails, another step is made with another candidate. As the same solving algorithm is used recursively, nested speculation are possible.
+
+This technique explores the tree of possible speculations synchronously, using randomization to avoid worst case scenarios where the correct speculation path is the last one to be evaluated. Being each speculation an independent scheme to solve, I introduced a version of the algorithm which explores the tree concurrently. However, being the computations to be made quite simple for modern hardware, the parallelization overhead makes the algorithm less efficient.

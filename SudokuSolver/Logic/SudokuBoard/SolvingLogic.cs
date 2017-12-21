@@ -18,10 +18,9 @@ namespace SudokuSolver.Logic
                     cellMatrix.Cast<SudokuCell>()
                         .Where(cell => !cell.IsDetermined);
 
-                SudokuCell speculationTarget =
-                    undeterminedCells
-                        .First(cell => cell.Candidates.Count ==
-                                       undeterminedCells.Min(c => c.Candidates.Count));
+                SudokuCell speculationTarget = undeterminedCells
+                        .First(cell => cell.Candidates.Count == 
+                            undeterminedCells.Min(c => c.Candidates.Count));
 
                 Random rng = new Random();
                 var shuffledCandidates = speculationTarget.Candidates
@@ -45,8 +44,14 @@ namespace SudokuSolver.Logic
             }
         }
 
-        public async Task ParallelSolve()
+        public async Task ParallelSolve(int branchingDepth = -1)
         {
+            if (branchingDepth == 0)
+            {
+                Solve();
+                return;
+            }
+
             BasicSolve();
             if(IsLegal() && !IsSolved())
             {
@@ -54,8 +59,7 @@ namespace SudokuSolver.Logic
                     cellMatrix.Cast<SudokuCell>()
                     .Where(cell => !cell.IsDetermined);
 
-                SudokuCell speculationTarget = 
-                    undeterminedCells
+                SudokuCell speculationTarget = undeterminedCells
                     .First(cell => cell.Candidates.Count == 
                         undeterminedCells.Min(c => c.Candidates.Count));
 
@@ -70,11 +74,14 @@ namespace SudokuSolver.Logic
                         cellColumn: speculationTarget.Column,
                         valueToSet: candidate);
 
+
                     var token = tokenSource.Token;
                     speculationTasks.Add(
                         Task.Factory.StartNew(() =>
                             {
-                                speculativeBoard.ParallelSolve().Wait(token);
+                                speculativeBoard
+                                    .ParallelSolve(branchingDepth > 0 ? branchingDepth - 1 : branchingDepth)
+                                    .Wait(token);
                                 return speculativeBoard;
                             },
                             token)

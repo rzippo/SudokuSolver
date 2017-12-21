@@ -65,8 +65,10 @@ namespace SudokuSolver
                         
                         if (parallelSolve.HasValue())
                         {
-                            //todo: use branching depth
-                            sudokuBoard.ParallelSolve().Wait();
+                            if (branchingDepth.HasValue() && int.TryParse(branchingDepth.Value(), out int depth))
+                                sudokuBoard.ParallelSolve(depth).Wait();
+                            else
+                                sudokuBoard.ParallelSolve().Wait();
                         }
                         else
                         {

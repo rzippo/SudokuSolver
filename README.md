@@ -15,7 +15,7 @@ At first, the program was built on finding *naked candidates*, which are cells w
 
 As I found it to be not enough, I then introduced *hidden candidates*, which are cells with more then one candidate but one of them is unique in one of the groups the cell belongs, e.g. a cell being the only one in its row who can hold the number 1.
 
-Turns out, there is [much more than that](https://www.sudokuoftheday.com/techniques/) required to be able to solve the hardest puzzles.
+Turns out, there is [much more than that](https://www.sudokuoftheday.com/techniques/) required to be able to solve the hardest puzzles using only deduction.
 
 So I introduced an implementation of the [backtracking algorithm](https://en.wikipedia.org/wiki/Backtracking), which builds upon the solving techniques already implemented.
 Each time a scheme is found to be unsolvable with the available deduction techniques, yet still legal, one of the undetermined cells with the lowest number of candidates is selected for the speculation.

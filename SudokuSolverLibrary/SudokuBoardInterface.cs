@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SudokuSolver.Logic
+namespace SudokuSolverLibrary
 {
     public partial class SudokuBoard
     {

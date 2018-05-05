@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SudokuSolver.Logic
+namespace SudokuSolverLibrary
 {
-    internal class SudokuCell
+    public class SudokuCell
     {
         public bool IsDetermined { get; private set; }
         public int? Value { get; private set; }

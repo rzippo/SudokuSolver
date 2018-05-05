@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace SudokuSolver
+namespace SudokuSolverCmd
 {
     internal partial class Program
     {

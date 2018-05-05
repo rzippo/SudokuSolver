@@ -1,11 +1,11 @@
-﻿using SudokuSolver.Logic;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.CommandLineUtils;
+using SudokuSolverLibrary;
 
-namespace SudokuSolver
+namespace SudokuSolverCmd
 {
     internal partial class Program
     {

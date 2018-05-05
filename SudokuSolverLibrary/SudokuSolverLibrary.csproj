@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageLicenseUrl>https://github.com/rzippo/SudokuSolver/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/rzippo/SudokuSolver</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rzippo/SudokuSolver</RepositoryUrl>
+    <ApplicationIcon>Sudoku.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="SudokuBoard\" />
-  </ItemGroup>
 
 </Project>

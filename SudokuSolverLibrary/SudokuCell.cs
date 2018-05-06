@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,26 +8,30 @@ namespace SudokuSolverLibrary
     public class SudokuCell
     {
         public bool IsDetermined { get; private set; }
-        public int? Value { get; private set; }
+
+        private int? _value;
+
+        [JsonProperty("value")]
+        public int? Value {
+            get => _value;
+            set {
+                if (value == null)
+                    return;
+
+                _value = value;
+                IsDetermined = true;
+                Candidates.Clear();
+                Candidates.Add((int)value);
+            }
+        }
         public IList<int> Candidates { get; private set; } = Enumerable.Range(1, 9).ToList();
 
-        public int Row { get; private set; }
-        public int Column { get; private set; }
+        [JsonProperty("row")]
+        public int Row { get; set; }
 
-        public SudokuCell(int row = 0, int column = 0)
-        {
-            Row = row;
-            Column = column;
-        }
-
-        public void Set(int valueToSet)
-        {
-            Value = valueToSet;
-            IsDetermined = true;
-            Candidates.Clear();
-            Candidates.Add(valueToSet);
-        }
-
+        [JsonProperty("column")]
+        public int Column { get; set; }
+        
         public void Clear()
         {
             Value = null;

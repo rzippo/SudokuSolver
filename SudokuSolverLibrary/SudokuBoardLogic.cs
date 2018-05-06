@@ -27,8 +27,7 @@ namespace SudokuSolverLibrary
                     .OrderBy(c => rng.Next());
                 foreach (int candidate in shuffledCandidates)
                 {
-                    SudokuBoard speculativeBoard = new SudokuBoard();
-                    speculativeBoard.CopyBoard(this);
+                    SudokuBoard speculativeBoard = new SudokuBoard(this);
                     speculativeBoard.SetCell(
                         cellRow: speculationTarget.Row,
                         cellColumn: speculationTarget.Column,
@@ -37,7 +36,7 @@ namespace SudokuSolverLibrary
                     speculativeBoard.Solve();
                     if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
                     {
-                        this.CopyBoard(speculativeBoard);
+                        this.Copy(speculativeBoard);
                         return;
                     }
                 }
@@ -67,8 +66,7 @@ namespace SudokuSolverLibrary
                 List<Task<SudokuBoard>> speculationTasks = new List<Task<SudokuBoard>>();
                 foreach (int candidate in speculationTarget.Candidates)
                 {
-                    SudokuBoard speculativeBoard = new SudokuBoard();
-                    speculativeBoard.CopyBoard(this);
+                    SudokuBoard speculativeBoard = new SudokuBoard(this);
                     speculativeBoard.SetCell(
                         cellRow: speculationTarget.Row,
                         cellColumn: speculationTarget.Column,
@@ -95,7 +93,7 @@ namespace SudokuSolverLibrary
                     if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
                     {
                         tokenSource.Cancel();
-                        this.CopyBoard(speculativeBoard);
+                        this.Copy(speculativeBoard);
                         return;
                     }
                     speculationTasks.Remove(completedTask);
@@ -174,7 +172,7 @@ namespace SudokuSolverLibrary
                     SudokuCell cell = sudokuGroup.First(c => c.Candidates.Contains(hiddenCandidate));
                     if (!cell.IsDetermined)
                     {
-                        cell.Set(hiddenCandidate);
+                        cell.Value = hiddenCandidate;
                         UpdateBoardCandidates(
                             sourceRow: cell.Row,
                             sourceColumn: cell.Column,

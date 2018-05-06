@@ -14,11 +14,17 @@ namespace SudokuSolverLibrary
         private readonly List<SudokuCell>[,] tiles;
         private readonly List<List<SudokuCell>> combinedGroups;
 
+        public SudokuPuzzle Puzzle { get; set; }
+
         public SudokuBoard()
         {
             for (int row = 0; row < 9; row++)
                 for (int column = 0; column < 9; column++)
-                    cellMatrix[row, column] = new SudokuCell(row, column);
+                    cellMatrix[row, column] = new SudokuCell()
+                    {
+                        Row = row,
+                        Column = column
+                    };
 
             rows = GatherRows();
             columns = GatherColumns();
@@ -29,10 +35,21 @@ namespace SudokuSolverLibrary
             combinedGroups.AddRange(tiles.Cast<List<SudokuCell>>());
         }
 
-        private void CopyBoard(SudokuBoard other)
+        public SudokuBoard(SudokuPuzzle puzzle) : this()
+        {
+            Puzzle = puzzle;
+            LoadPuzzle();
+        }
+
+        public SudokuBoard(SudokuBoard copySource) : this()
+        {
+            Copy(copySource);
+        }
+
+        public void Copy(SudokuBoard source)
         {
             ClearBoard();
-            other.cellMatrix.Cast<SudokuCell>()
+            source.cellMatrix.Cast<SudokuCell>()
                 .Where(cell => cell.IsDetermined)
                 .ToList()
                 .ForEach(cell => this.SetCell(
@@ -40,7 +57,7 @@ namespace SudokuSolverLibrary
                            cellColumn: cell.Column,
                            valueToSet: (int)cell.Value));
         }
-
+        
         private List<SudokuCell>[] GatherRows()
         {
             List<SudokuCell>[] rows = new List<SudokuCell>[9];
@@ -85,6 +102,17 @@ namespace SudokuSolverLibrary
                 }
             }
             return tiles;
+        }
+
+        private void LoadPuzzle()
+        {
+            if (Puzzle == null || Puzzle.Cells == null)
+                return;
+
+            foreach(var cell in Puzzle.Cells)
+            {
+                cellMatrix[cell.Row, cell.Column].Value = cell.Value;
+            }
         }
     }
 }

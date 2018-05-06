@@ -57,6 +57,8 @@ namespace SudokuSolverLibrary
         {
             foreach (var cell in cellMatrix)
                 cell.Clear();
+            if (Puzzle != null)
+                LoadPuzzle();
         }
 
         public void ClearCell(
@@ -73,7 +75,7 @@ namespace SudokuSolverLibrary
             int valueToSet)
         {
             SudokuCell cell = cellMatrix[cellRow, cellColumn];
-            cell.Set(valueToSet);
+            cell.Value = valueToSet;
             UpdateBoardCandidates(
                 sourceRow: cellRow,
                 sourceColumn: cellColumn,

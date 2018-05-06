@@ -15,10 +15,10 @@ namespace SudokuSolverLibrary
 
         public readonly IEnumerable<SudokuCell> MatrixIterator;
         
-        private readonly List<SudokuCell>[] rows;
-        private readonly List<SudokuCell>[] columns;
-        private readonly List<SudokuCell>[,] tiles;
-        private readonly List<List<SudokuCell>> combinedGroups;
+        private readonly SudokuGroup[] rows;
+        private readonly SudokuGroup[] columns;
+        private readonly SudokuGroup[,] tiles;
+        private readonly List<SudokuGroup> combinedGroups;
 
         [JsonProperty("puzzle")]
         public SudokuPuzzle Puzzle { get; set; }
@@ -37,10 +37,10 @@ namespace SudokuSolverLibrary
             rows = GatherRows();
             columns = GatherColumns();
             tiles = GatherTiles();
-            combinedGroups = new List<List<SudokuCell>>();
+            combinedGroups = new List<SudokuGroup>();
             combinedGroups.AddRange(rows);
             combinedGroups.AddRange(columns);
-            combinedGroups.AddRange(tiles.Cast<List<SudokuCell>>());
+            combinedGroups.AddRange(tiles.Cast<SudokuGroup>());
         }
 
         public SudokuBoard(SudokuPuzzle puzzle) : this()
@@ -66,47 +66,41 @@ namespace SudokuSolverLibrary
                            valueToSet: (int)cell.Value));
         }
         
-        private List<SudokuCell>[] GatherRows()
+        private SudokuGroup[] GatherRows()
         {
-            List<SudokuCell>[] rows = new List<SudokuCell>[9];
+            SudokuGroup[] rows = new SudokuGroup[9];
             for (int rowIndex = 0; rowIndex < 9; rowIndex++)
             {
-                rows[rowIndex] = new List<SudokuCell>();
-                for (int columnIndex = 0; columnIndex < 9; columnIndex++)
-                    rows[rowIndex].Add(Matrix[rowIndex, columnIndex]);
+                rows[rowIndex] = new SudokuGroup(
+                    MatrixIterator.AsParallel().Where(cell => cell.Row == rowIndex));                
             }
             return rows;
         }
 
-        private List<SudokuCell>[] GatherColumns()
+        private SudokuGroup[] GatherColumns()
         {
-            List<SudokuCell>[] columns = new List<SudokuCell>[9];
+            SudokuGroup[] columns = new SudokuGroup[9];
             for (int columnIndex = 0; columnIndex < 9; columnIndex++)
             {
-                columns[columnIndex] = new List<SudokuCell>();
-                for (int rowIndex = 0; rowIndex < 9; rowIndex++)
-                    columns[columnIndex].Add(Matrix[rowIndex, columnIndex]);
+                columns[columnIndex] = new SudokuGroup(
+                    MatrixIterator.AsParallel().Where(cell => cell.Column == columnIndex));
             }
             return columns;
         }
 
-        private List<SudokuCell>[,] GatherTiles()
+        private SudokuGroup[,] GatherTiles()
         {
-            List<SudokuCell>[,] tiles = new List<SudokuCell>[3, 3];
+            SudokuGroup[,] tiles = new SudokuGroup[3, 3];
             for (int tileVIndex = 0; tileVIndex < 3; tileVIndex++)
             {
                 for (int tileHIndex = 0; tileHIndex < 3; tileHIndex++)
                 {
-                    tiles[tileVIndex, tileHIndex] = new List<SudokuCell>();
-                    for (int rowOffset = 0; rowOffset < 3; rowOffset++)
-                    {
-                        for (int columnOffset = 0; columnOffset < 3; columnOffset++)
-                        {
-                            int row = tileVIndex * 3 + rowOffset;
-                            int column = tileHIndex * 3 + columnOffset;
-                            tiles[tileVIndex, tileHIndex].Add(Matrix[row, column]);
-                        }
-                    }
+                    tiles[tileVIndex, tileHIndex] = new SudokuGroup(
+                            MatrixIterator.AsParallel().Where(cell =>
+                                ( cell.Row >= tileVIndex*3 && cell.Row < (tileVIndex + 1) * 3) &&
+                                ( cell.Column >= tileHIndex * 3 && cell.Column < (tileHIndex + 1) * 3)
+                            )
+                        );
                 }
             }
             return tiles;

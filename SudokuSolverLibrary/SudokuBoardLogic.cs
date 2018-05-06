@@ -15,7 +15,7 @@ namespace SudokuSolverLibrary
         [JsonProperty("solved")]
         public bool IsSolved => combinedGroups.AsParallel()
                 .All( cellGroup => sudokuValues
-                    .All( value => cellGroup
+                    .All( value => cellGroup.Cells
                         .Any( cell => cell.Value == value)));
 
         [JsonProperty("legal")]
@@ -27,7 +27,7 @@ namespace SudokuSolverLibrary
                 combinedGroups
                 .All(cellGroup => sudokuValues
                                     .All(value =>
-                                           cellGroup.Count(cell => cell.IsDetermined && cell.Value == value) <= 1));
+                                           cellGroup.Cells.Count(cell => cell.IsDetermined && cell.Value == value) <= 1));
 
         public void Solve()
         {
@@ -159,15 +159,15 @@ namespace SudokuSolverLibrary
         {
             return combinedGroups.Sum(SetGroupHiddenCandidates);
 
-            int SetGroupHiddenCandidates(List<SudokuCell> sudokuGroup)
+            int SetGroupHiddenCandidates(SudokuGroup sudokuGroup)
             {
                 int nCellsSet = 0;
                 IEnumerable<int> hiddenCandidates = sudokuValues.Where(
-                    v => sudokuGroup.Count(cell => cell.Candidates.Contains(v)) == 1
+                    v => sudokuGroup.Cells.Count(cell => cell.Candidates.Contains(v)) == 1
                 );
                 foreach (int hiddenCandidate in hiddenCandidates)
                 {
-                    SudokuCell cell = sudokuGroup.First(c => c.Candidates.Contains(hiddenCandidate));
+                    SudokuCell cell = sudokuGroup.Cells.First(c => c.Candidates.Contains(hiddenCandidate));
                     if (!cell.IsDetermined)
                     {
                         cell.Value = hiddenCandidate;
@@ -203,13 +203,13 @@ namespace SudokuSolverLibrary
             int sourceColumn,
             int valueToRemove)
         {
-            rows[sourceRow]
+            rows[sourceRow].Cells.ToList()
                 .ForEach(cell => cell.RemoveCandidate(valueToRemove));
 
-            columns[sourceColumn]
+            columns[sourceColumn].Cells.ToList()
                 .ForEach(cell => cell.RemoveCandidate(valueToRemove));
 
-            tiles[sourceRow / 3, sourceColumn / 3]
+            tiles[sourceRow / 3, sourceColumn / 3].Cells.ToList()
                 .ForEach(cell => cell.RemoveCandidate(valueToRemove));
         }
     }

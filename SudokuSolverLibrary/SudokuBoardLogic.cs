@@ -171,10 +171,6 @@ namespace SudokuSolverLibrary
                     if (!cell.IsDetermined)
                     {
                         cell.Value = hiddenCandidate;
-                        UpdateBoardCandidates(
-                            sourceRow: cell.Row,
-                            sourceColumn: cell.Column,
-                            valueToRemove: (int)cell.Value);
                         nCellsSet++;
                     }
                 }

@@ -70,10 +70,6 @@ namespace SudokuSolverLibrary
         {
             SudokuCell cell = Matrix[cellRow, cellColumn];
             cell.Value = valueToSet;
-            UpdateBoardCandidates(
-                sourceRow: cellRow,
-                sourceColumn: cellColumn,
-                valueToRemove: valueToSet);
         }
     }
 }

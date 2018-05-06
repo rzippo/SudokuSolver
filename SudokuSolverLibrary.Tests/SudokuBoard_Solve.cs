@@ -14,24 +14,29 @@ namespace SudokuSolverLibrary.Tests
             {
                 SudokuBoard board = new SudokuBoard(puzzle);
                 board.Solve();
-                Assert.True(board.IsSolved());
+                Assert.True(board.IsSolved);
             }
         }
 
         [Fact]
-        public void LoadFromJson_Solve()
+        public void LoadFromJson_Solve_Save()
         {
             using (StreamReader sr = new StreamReader("Hardest.json"))
             {
                 SudokuPuzzle puzzle = JsonConvert.DeserializeObject<SudokuPuzzle>(sr.ReadToEnd());
                 SudokuBoard board = new SudokuBoard(puzzle);
                 board.Solve();
-                Assert.True(board.IsSolved());
+                Assert.True(board.IsSolved);
+
+                using (StreamWriter sw = new StreamWriter("Hardest.solution.json"))
+                {
+                    sw.Write(JsonConvert.SerializeObject(board));
+                }
             }
         }
 
         [Fact]
-        private void SaveJson()
+        public void SavePuzzleJson()
         {
             foreach (SudokuPuzzle puzzle in StaticPuzzles.Puzzles)
             {
@@ -40,6 +45,6 @@ namespace SudokuSolverLibrary.Tests
                     sw.Write(JsonConvert.SerializeObject(puzzle));
                 }
             }
-        }
+        }        
     }
 }

@@ -6,12 +6,6 @@ namespace SudokuSolverLibrary
 {
     public partial class SudokuBoard
     {
-        public bool HasNakedCandidate()
-        {
-            return cellMatrix.Cast<SudokuCell>()
-                .Any(cell => cell.HasNakedCandidate());
-        }
-
         public void PrintBoard()
         {
             const string sepLine = "  ——————— ——————— ——————— ";
@@ -28,7 +22,7 @@ namespace SudokuSolverLibrary
 
                     Console.Write(' ');
 
-                    SudokuCell cell = cellMatrix[row, column];
+                    SudokuCell cell = Matrix[row, column];
                     if ( cell.IsDetermined)
                         Console.Write(cell.Value);
                     else
@@ -39,14 +33,14 @@ namespace SudokuSolverLibrary
             }
             Console.WriteLine(sepLine);
             Console.WriteLine();
-            if (!IsLegal())
+            if (!IsLegal)
                 Console.WriteLine("This sudoku is not legal!");
-            Console.WriteLine("This sudoku is " + (IsSolved() ? "solved" : "not solved"));
+            Console.WriteLine("This sudoku is " + (IsSolved ? "solved" : "not solved"));
         }
 
         public void PrintCell(int cellRow, int cellColumn)
         {
-            SudokuCell cell = cellMatrix[cellRow, cellColumn];
+            SudokuCell cell = Matrix[cellRow, cellColumn];
             Console.WriteLine($"Cell [{cellRow},{cellColumn}]:");
             Console.WriteLine($"\tDetermined: {cell.IsDetermined}");
             Console.WriteLine($"\tValue: {cell.Value}");
@@ -55,7 +49,7 @@ namespace SudokuSolverLibrary
 
         public void ClearBoard()
         {
-            foreach (var cell in cellMatrix)
+            foreach (var cell in Matrix)
                 cell.Clear();
             if (Puzzle != null)
                 LoadPuzzle();
@@ -65,7 +59,7 @@ namespace SudokuSolverLibrary
             int cellRow,
             int cellColumn)
         {
-            cellMatrix[cellRow, cellColumn].Clear();
+            Matrix[cellRow, cellColumn].Clear();
             RecomputeCandidates();
         }
 
@@ -74,7 +68,7 @@ namespace SudokuSolverLibrary
             int cellColumn,
             int valueToSet)
         {
-            SudokuCell cell = cellMatrix[cellRow, cellColumn];
+            SudokuCell cell = Matrix[cellRow, cellColumn];
             cell.Value = valueToSet;
             UpdateBoardCandidates(
                 sourceRow: cellRow,

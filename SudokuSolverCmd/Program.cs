@@ -76,7 +76,7 @@ namespace SudokuSolverCmd
                         }
 
                         var elapsedMs = watch.ElapsedMilliseconds;
-                        Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+                        Console.WriteLine(sudokuBoard.IsSolved ? "Solving successful!" : "Solving failed!");
                         Console.WriteLine($"Execution took {elapsedMs} milliseconds.");
 
                         if (verbosity.HasValue())

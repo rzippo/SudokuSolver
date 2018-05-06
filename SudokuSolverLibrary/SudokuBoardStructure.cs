@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace SudokuSolverLibrary
@@ -8,24 +10,30 @@ namespace SudokuSolverLibrary
     {
         private static readonly List<int> sudokuValues = Enumerable.Range(1, 9).ToList();
 
-        private readonly SudokuCell[,] cellMatrix = new SudokuCell[9, 9];
+        [JsonProperty("matrix")]
+        public readonly SudokuCell[,] Matrix = new SudokuCell[9, 9];
+
+        public readonly IEnumerable<SudokuCell> MatrixIterator;
+        
         private readonly List<SudokuCell>[] rows;
         private readonly List<SudokuCell>[] columns;
         private readonly List<SudokuCell>[,] tiles;
         private readonly List<List<SudokuCell>> combinedGroups;
 
+        [JsonProperty("puzzle")]
         public SudokuPuzzle Puzzle { get; set; }
 
         public SudokuBoard()
         {
             for (int row = 0; row < 9; row++)
                 for (int column = 0; column < 9; column++)
-                    cellMatrix[row, column] = new SudokuCell()
+                    Matrix[row, column] = new SudokuCell()
                     {
                         Row = row,
                         Column = column
                     };
 
+            MatrixIterator = Matrix.Cast<SudokuCell>();
             rows = GatherRows();
             columns = GatherColumns();
             tiles = GatherTiles();
@@ -49,7 +57,7 @@ namespace SudokuSolverLibrary
         public void Copy(SudokuBoard source)
         {
             ClearBoard();
-            source.cellMatrix.Cast<SudokuCell>()
+            source.MatrixIterator
                 .Where(cell => cell.IsDetermined)
                 .ToList()
                 .ForEach(cell => this.SetCell(
@@ -65,7 +73,7 @@ namespace SudokuSolverLibrary
             {
                 rows[rowIndex] = new List<SudokuCell>();
                 for (int columnIndex = 0; columnIndex < 9; columnIndex++)
-                    rows[rowIndex].Add(cellMatrix[rowIndex, columnIndex]);
+                    rows[rowIndex].Add(Matrix[rowIndex, columnIndex]);
             }
             return rows;
         }
@@ -77,7 +85,7 @@ namespace SudokuSolverLibrary
             {
                 columns[columnIndex] = new List<SudokuCell>();
                 for (int rowIndex = 0; rowIndex < 9; rowIndex++)
-                    columns[columnIndex].Add(cellMatrix[rowIndex, columnIndex]);
+                    columns[columnIndex].Add(Matrix[rowIndex, columnIndex]);
             }
             return columns;
         }
@@ -96,7 +104,7 @@ namespace SudokuSolverLibrary
                         {
                             int row = tileVIndex * 3 + rowOffset;
                             int column = tileHIndex * 3 + columnOffset;
-                            tiles[tileVIndex, tileHIndex].Add(cellMatrix[row, column]);
+                            tiles[tileVIndex, tileHIndex].Add(Matrix[row, column]);
                         }
                     }
                 }
@@ -111,7 +119,7 @@ namespace SudokuSolverLibrary
 
             foreach(var cell in Puzzle.Cells)
             {
-                cellMatrix[cell.Row, cell.Column].Value = cell.Value;
+                Matrix[cell.Row, cell.Column].Value = cell.Value;
             }
         }
     }

@@ -7,6 +7,7 @@ namespace SudokuSolverLibrary
 {
     public class SudokuCell
     {
+        [JsonIgnore]
         public bool IsDetermined { get; private set; }
 
         private int? _value;
@@ -24,7 +25,9 @@ namespace SudokuSolverLibrary
                 Candidates.Add((int)value);
             }
         }
-        public IList<int> Candidates { get; private set; } = Enumerable.Range(1, 9).ToList();
+
+        [JsonIgnore]
+        public SortedSet<int> Candidates { get; private set; } = new SortedSet<int>(Enumerable.Range(1, 9));
 
         [JsonProperty("row")]
         public int Row { get; set; }
@@ -36,7 +39,7 @@ namespace SudokuSolverLibrary
         {
             Value = null;
             IsDetermined = false;
-            Candidates = Enumerable.Range(1, 9).ToList();
+            Candidates = new SortedSet<int>(Enumerable.Range(1, 9));
         }
 
         public void RemoveCandidate( int valueToRemove )

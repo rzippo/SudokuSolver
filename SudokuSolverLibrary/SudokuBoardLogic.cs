@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,32 @@ namespace SudokuSolverLibrary
 {
     public partial class SudokuBoard
     {
+        public bool HasNakedCandidate => MatrixIterator.Any(cell => cell.HasNakedCandidate());
+               
+        [JsonProperty("solved")]
+        public bool IsSolved => combinedGroups.AsParallel()
+                .All( cellGroup => sudokuValues
+                    .All( value => cellGroup
+                        .Any( cell => cell.Value == value)));
+
+        [JsonProperty("legal")]
+        public bool IsLegal =>
+                MatrixIterator
+                .Where(cell => !cell.IsDetermined)
+                .All(cell => cell.Candidates.Count > 0)
+                &&
+                combinedGroups
+                .All(cellGroup => sudokuValues
+                                    .All(value =>
+                                           cellGroup.Count(cell => cell.IsDetermined && cell.Value == value) <= 1));
+
         public void Solve()
         {
             BasicSolve();
-            if (IsLegal() && !IsSolved())
+            if (IsLegal && !IsSolved)
             {
                 var undeterminedCells =
-                    cellMatrix.Cast<SudokuCell>()
+                    MatrixIterator
                         .Where(cell => !cell.IsDetermined);
 
                 SudokuCell speculationTarget = undeterminedCells
@@ -34,7 +54,7 @@ namespace SudokuSolverLibrary
                         valueToSet: candidate);
 
                     speculativeBoard.Solve();
-                    if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
+                    if (speculativeBoard.IsLegal && speculativeBoard.IsSolved)
                     {
                         this.Copy(speculativeBoard);
                         return;
@@ -52,10 +72,10 @@ namespace SudokuSolverLibrary
             }
 
             BasicSolve();
-            if(IsLegal() && !IsSolved())
+            if(IsLegal && !IsSolved)
             {
                 var undeterminedCells =
-                    cellMatrix.Cast<SudokuCell>()
+                    MatrixIterator
                     .Where(cell => !cell.IsDetermined);
 
                 SudokuCell speculationTarget = undeterminedCells
@@ -90,7 +110,7 @@ namespace SudokuSolverLibrary
                 {
                     Task<SudokuBoard> completedTask = await Task.WhenAny(speculationTasks);
                     SudokuBoard speculativeBoard = completedTask.Result;
-                    if (speculativeBoard.IsLegal() && speculativeBoard.IsSolved())
+                    if (speculativeBoard.IsLegal && speculativeBoard.IsSolved)
                     {
                         tokenSource.Cancel();
                         this.Copy(speculativeBoard);
@@ -106,39 +126,17 @@ namespace SudokuSolverLibrary
             int lastCycleSetEvents;
             do
             {
-                while (HasNakedCandidate())
+                while (HasNakedCandidate)
                     SetNakedCandidateCells();
                 lastCycleSetEvents = SetHiddenCandidateCells();
-            } while ( IsLegal() && !IsSolved() && lastCycleSetEvents > 0);
-        }
-
-        public bool IsSolved()
-        {
-            return combinedGroups.All(
-                    cellGroup => sudokuValues.All(
-                        value => cellGroup.Any(
-                            cell => cell.Value == value)));
-        }
-
-        public bool IsLegal()
-        {
-            RecomputeCandidates();
-            return
-                cellMatrix.Cast<SudokuCell>()
-                .Where(cell => !cell.IsDetermined)
-                .All(cell => cell.Candidates.Count > 0)
-                &&
-                combinedGroups
-                .All(cellGroup => sudokuValues
-                                    .All( value =>
-                                            cellGroup.Count(cell => cell.IsDetermined && cell.Value == value) <= 1));
+            } while ( IsLegal && !IsSolved && lastCycleSetEvents > 0);
         }
 
         public int SetNakedCandidateCells()
         {
             int nCellsSet = 0;
 
-            cellMatrix.Cast<SudokuCell>()
+            MatrixIterator
                 .Where(cell => cell.HasNakedCandidate())
                 .ToList()
                 .ForEach(
@@ -149,7 +147,7 @@ namespace SudokuSolverLibrary
                             SetCell(
                                 cellRow: cell.Row,
                                 cellColumn: cell.Column,
-                                valueToSet: cell.Candidates[0]);
+                                valueToSet: cell.Candidates.First());
                             nCellsSet++;
                         }
                     });
@@ -186,12 +184,12 @@ namespace SudokuSolverLibrary
 
         public void RecomputeCandidates()
         {
-            cellMatrix.Cast<SudokuCell>()
+            MatrixIterator
                 .Where(cell => !cell.IsDetermined)
                 .ToList()
                 .ForEach(cell => cell.Clear());
             
-            cellMatrix.Cast<SudokuCell>()
+            MatrixIterator
                 .Where(cell => cell.IsDetermined)
                 .ToList()
                 .ForEach(cell => UpdateBoardCandidates(

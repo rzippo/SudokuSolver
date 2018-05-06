@@ -121,7 +121,7 @@ namespace SudokuSolverCmd
                         var watch = Stopwatch.StartNew();
                         sudokuBoard.Solve();
                         var elapsedMs = watch.ElapsedMilliseconds;
-                        Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+                        Console.WriteLine(sudokuBoard.IsSolved ? "Solving successful!" : "Solving failed!");
                         Console.WriteLine($"Execution took {elapsedMs} milliseconds.");
                         Console.WriteLine("The resulting sudoku is: ");
                         sudokuBoard.PrintBoard();
@@ -135,7 +135,7 @@ namespace SudokuSolverCmd
                         var watch = Stopwatch.StartNew();
                         sudokuBoard.ParallelSolve().Wait();
                         var elapsedMs = watch.ElapsedMilliseconds;
-                        Console.WriteLine(sudokuBoard.IsSolved() ? "Solving successful!" : "Solving failed!");
+                        Console.WriteLine(sudokuBoard.IsSolved ? "Solving successful!" : "Solving failed!");
                         Console.WriteLine($"Execution took {elapsedMs} milliseconds.");
                         Console.WriteLine("The resulting sudoku is: ");
                         sudokuBoard.PrintBoard();

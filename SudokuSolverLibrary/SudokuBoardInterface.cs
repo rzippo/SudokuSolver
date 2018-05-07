@@ -6,6 +6,10 @@ namespace SudokuSolverLibrary
 {
     public partial class SudokuBoard
     {
+        //todo: support higher sizes of Sudoku
+        public int RowCount { get; set; } = 9;
+        public int ColumnCount { get; set; } = 9;
+
         public void PrintBoard()
         {
             const string sepLine = "  ——————— ——————— ——————— ";

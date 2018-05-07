@@ -1,0 +1,49 @@
+﻿<Window x:Class="SudokuSolverWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SudokuSolverWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid
+        Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Grid.Row="0">
+            <TextBox 
+                Name="JsonPath"
+                Margin="4"
+                Width="300"/>
+            <Button
+                Name="JsonPathSelector"
+                Margin="4"
+                Click="JsonPathSelector_OnClick">
+                Select json
+            </Button>
+            <Button
+                Name="Load"
+                Margin="4"
+                Click="Load_OnClick">
+                Load
+            </Button>
+            <Button
+                Name="Solve"
+                Margin="4"
+                Click="Solve_Click">
+                Solve
+            </Button>
+        </StackPanel>
+        <local:SudokuBoardView
+            x:Name="BoardView"
+            Grid.Row="1">
+        </local:SudokuBoardView>
+    </Grid>
+</Window>

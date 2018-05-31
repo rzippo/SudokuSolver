@@ -1,1 +1,1 @@
-Icon made by (Freepik)[http://www.freepik.com/] from (www.flaticon.com)[http://www.flaticon.com/]
+Icon made by [Freepik](http://www.freepik.com/) from [www.flaticon.com](http://www.flaticon.com/)
